@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/intheloop/Desktop/embedded-drone/controller/build/CMakeFiles/bootloader
+/home/intheloop/Desktop/embedded-drone/controller/build/CMakeFiles/bootloader.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/CMakeFiles/bootloader-complete.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/intheloop/Desktop/embedded-drone/controller/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
