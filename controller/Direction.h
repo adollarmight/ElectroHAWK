@@ -13,7 +13,7 @@ namespace Driver {
     RotateRight,
     Rest, // stays in position
     Nothing // motors aren't running
-  }
+  };
 }
 
 #endif

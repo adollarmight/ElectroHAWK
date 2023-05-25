@@ -1,36 +1,41 @@
 #ifndef _INSTANCE_H_
 #define _INSTANCE_H_
 
+#include <string>
 #include "Hardware.h"
+#include "Communication.h"
+
+namespace Config {
+  inline constexpr int RX = 16;
+  inline constexpr int TX = 17;
+  inline constexpr int RTS = 12;
+  inline constexpr int CTS = 14;
+}
 
 class Instance {
 private:
-  Hardware::Motor frontLeft, frontRight, backLeft, backRight;
-  Hardware::IMU* imu;
+  Communication::UART<
+    Communication::SensorData, 
+    Communication::DirectionData
+    > communication;
+
 public:
-  Instance()
-    : frontLeft(25), 
-      frontRight(26), 
-      backLeft(32), 
-      backRight(33) 
-  {
+  Instance(): communication(Config::RX, Config::TX) {
     Serial.begin(115200);
-    Hardware::initialize();
-    imu = new Hardware::IMU();
+    Hardware::initialize(); 
   }
 
   ~Instance() {
-    delete imu;
   }
 
   void update() {
-    Serial.print("Pitch: ");
-    Serial.println(imu->getPitch() * 180 / M_PI);
-    Serial.print("Yaw: "); 
-    Serial.println(imu->getYaw() * 180 / M_PI);
-    Serial.print("Roll: ");
-    Serial.println(imu->getRoll() * 180 / M_PI);
-    Serial.flush();
+    communication.send({ 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0 });
+    if (communication.receivedDataCount()) {
+      Communication::DirectionData direction = communication.recieve();
+      Serial.print(direction.direction);
+      Serial.print(" ");
+      Serial.println(direction.magnitude);
+    }
     delay(100);
   }
 };
