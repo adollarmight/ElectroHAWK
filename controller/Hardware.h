@@ -13,12 +13,13 @@ namespace Hardware {
       inline constexpr std::pair<int, int> pulseWidth = {1000, 2000};
     }
 
-    namespace Gyro {
+    namespace IMU {
       inline constexpr int CalibrationCount = 4000;
+      inline constexpr double AccelerationXOffset = -0.07, AccelerationYOffset = -0.04, AccelerationZOffset = -0.075;
+      inline constexpr int ReadDataMicrosecondsDelay = 2500;
     }
   }
 
-  // initialize everything hardware oriented
   inline void initialize() {
     // #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     //   Wire.begin();
@@ -69,12 +70,11 @@ namespace Hardware {
     double yawOffset, pitchOffset, rollOffset;
 
     double accelerationX, accelerationY, accelerationZ;
-    double accelerationXOffset = -0.03, accelerationYOffset = 0.04, accelerationZOffset = -0.08;
 
     double rollAngle, pitchAngle;
 
-    double kalmanRollAngle, kalmanUncertaintyRollAngle = 2 * 2;
-    double kalmanPitchAngle, kalmanUncertaintyPitchAngle = 2 * 2;
+    double kalmanRollAngle = 0, kalmanUncertaintyRollAngle = 2 * 2;
+    double kalmanPitchAngle = 0, kalmanUncertaintyPitchAngle = 2 * 2;
     double kalman1DOutput[2] = {0, 0};
 
     void kalman_1d(double state, double uncertainty, double input, double measurement) {
@@ -91,10 +91,17 @@ namespace Hardware {
       while (running) {
         readData();
 
-        // if i substract two doubles it gets OVF :)
         rollRate -= rollOffset;
         pitchRate -= pitchOffset;
         yawRate -= yawOffset;
+
+        // int rollAux = (int)(rollRate * 1000) - (int)(rollOffset * 1000);
+        // int pitchAux = (int)(pitchRate * 1000) - (int)(pitchOffset * 1000);
+        // int yawAux = (int)(yawRate * 1000) - (int)(yawOffset * 1000);
+
+        // rollRate = (double)rollAux / 1000;
+        // pitchRate = (double)pitchAux / 1000;
+        // yawRate = (double)yawAux / 1000;
 
         kalman_1d(kalmanRollAngle, kalmanUncertaintyRollAngle, rollRate, rollAngle);
         kalmanRollAngle=kalman1DOutput[0]; 
@@ -104,7 +111,7 @@ namespace Hardware {
         kalmanPitchAngle=kalman1DOutput[0]; 
         kalmanUncertaintyPitchAngle=kalman1DOutput[1];
 
-        delay(50);
+        delayMicroseconds(Config::IMU::ReadDataMicrosecondsDelay);
       }
     }
 
@@ -141,9 +148,9 @@ namespace Hardware {
       pitchRate = (double)GyroY / 65.5;
       yawRate = (double)GyroZ / 65.5;
 
-      accelerationX = (double)AccXLSB/ 4096 + accelerationXOffset;
-      accelerationY = (double)AccYLSB/ 4096 + accelerationYOffset;
-      accelerationZ = (double)AccZLSB/ 4096 + accelerationZOffset;
+      accelerationX = (double)AccXLSB / 4096 + Config::IMU::AccelerationXOffset;
+      accelerationY = (double)AccYLSB / 4096 + Config::IMU::AccelerationYOffset;
+      accelerationZ = (double)AccZLSB / 4096 + Config::IMU::AccelerationZOffset;
 
       rollAngle = atan(accelerationY / sqrt(accelerationX * accelerationX + accelerationZ * accelerationZ)) * 1 / (3.142 / 180);
       pitchAngle = -atan(accelerationX / sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 1 / (3.142 / 180);
@@ -159,17 +166,21 @@ namespace Hardware {
       Wire.write(0x00);
       Wire.endTransmission();
 
-      for (int i = 0; i < Config::Gyro::CalibrationCount; i++) {
+      int yawAux;
+      int pitchAux;
+      int rollAux;
+
+      for (int i = 0; i < Config::IMU::CalibrationCount; i++) {
         readData();
-        yawOffset += yawRate;
-        pitchOffset += pitchRate;
-        rollOffset += rollRate;
+        yawAux += yawRate * 1000;
+        pitchAux += pitchRate * 1000;
+        rollAux += rollRate * 1000;
         delay(1);
       }
 
-      yawOffset /= Config::Gyro::CalibrationCount;
-      pitchOffset /= Config::Gyro::CalibrationCount;
-      rollOffset /= Config::Gyro::CalibrationCount;
+      yawOffset = (double)yawAux / 1000 / Config::IMU::CalibrationCount;
+      pitchOffset = (double)pitchAux / 1000 / Config::IMU::CalibrationCount;
+      rollOffset = (double)rollAux / 1000 / Config::IMU::CalibrationCount;
 
       readThread = std::thread(&IMU::readHandle, this);
     }
