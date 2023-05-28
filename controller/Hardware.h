@@ -5,33 +5,27 @@
 #include <mutex>
 #include <utility>
 #include <ESP32_Servo.h>
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
-#endif
+#include "Wire.h"
 
 namespace Hardware {
   namespace Config {
     namespace Motor {
       inline constexpr std::pair<int, int> pulseWidth = {1000, 2000};
     }
+
     namespace Gyro {
-      inline constexpr int XGyroOffset = 0;
-      inline constexpr int YGyroOffset = 0;
-      inline constexpr int ZGyroOffset = 0;
-      inline constexpr int ZAccelOffset = 1000;
+      inline constexpr int CalibrationCount = 4000;
     }
   }
 
   // initialize everything hardware oriented
   inline void initialize() {
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-      Wire.begin();
-      Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-      Fastwire::setup(400, true);
-    #endif
+    // #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    //   Wire.begin();
+    //   Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+    // #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+    //   Fastwire::setup(400, true);
+    // #endif
   }
 
   class Motor {
@@ -45,7 +39,13 @@ namespace Hardware {
           Config::Motor::pulseWidth.first, 
           Config::Motor::pulseWidth.second
         );
+        delay(250);
         controller.write(0);
+
+        // analogWriteFrequency(pin, 250);
+        // analogWriteResolution(12);
+        // delay(250);
+        // analogWrite(pin, 0);
       }
 
       void setSpeed(double speed) {
@@ -54,58 +54,122 @@ namespace Hardware {
         else if (speed < 0)
           speed = 0;
         controller.write(floor(speed * 180));
+        // analogWrite(pin, 1.024 * speed);
       }
   };
 
   class IMU {
   private:
-    MPU6050 mpu;
-    uint16_t packetSize;
     bool running = true;
 
-    double yaw = 69, pitch = 69, roll = 69;
     std::thread readThread;
     std::mutex readMutex;
+
+    double yawRate, pitchRate, rollRate;
+    double yawOffset, pitchOffset, rollOffset;
+
+    double accelerationX, accelerationY, accelerationZ;
+    double accelerationXOffset = -0.03, accelerationYOffset = 0.04, accelerationZOffset = -0.08;
+
+    double rollAngle, pitchAngle;
+
+    double kalmanRollAngle, kalmanUncertaintyRollAngle = 2 * 2;
+    double kalmanPitchAngle, kalmanUncertaintyPitchAngle = 2 * 2;
+    double kalman1DOutput[2] = {0, 0};
+
+    void kalman_1d(double state, double uncertainty, double input, double measurement) {
+      state = state + 0.004 * input;
+      uncertainty = uncertainty + 0.004 * 0.004 * 4 * 4;
+      double kalmanGain=uncertainty * 1 / (1 * uncertainty + 3 * 3);
+      state = state + kalmanGain * (measurement - state);
+      uncertainty = (1 - kalmanGain) * uncertainty;
+      kalman1DOutput[0] = state; 
+      kalman1DOutput[1] = uncertainty;
+    }
+
     void readHandle() {
-      uint8_t mpuIntStatus;
-      uint16_t fifoCount;
-      uint8_t fifoBuffer[64];
-      Quaternion q;
-      VectorFloat gravity;
-      float ypr[3];
-
       while (running) {
-        mpu.dmpGetCurrentFIFOPacket(fifoBuffer);
-        mpu.dmpGetQuaternion(&q, fifoBuffer);
-        mpu.dmpGetGravity(&gravity, &q);
-        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+        readData();
 
-        readMutex.lock();
-        yaw = ypr[0];
-        pitch = ypr[1];
-        roll = ypr[2];
-        readMutex.unlock();
+        // if i substract two doubles it gets OVF :)
+        rollRate -= rollOffset;
+        pitchRate -= pitchOffset;
+        yawRate -= yawOffset;
+
+        kalman_1d(kalmanRollAngle, kalmanUncertaintyRollAngle, rollRate, rollAngle);
+        kalmanRollAngle=kalman1DOutput[0]; 
+        kalmanUncertaintyRollAngle=kalman1DOutput[1];
+
+        kalman_1d(kalmanPitchAngle, kalmanUncertaintyPitchAngle, pitchRate, pitchAngle);
+        kalmanPitchAngle=kalman1DOutput[0]; 
+        kalmanUncertaintyPitchAngle=kalman1DOutput[1];
+
+        delay(50);
       }
+    }
+
+    void readData() {
+      Wire.beginTransmission(0x68);
+      Wire.write(0x1A);
+      Wire.write(0x05);
+      Wire.endTransmission();
+      Wire.beginTransmission(0x68);
+      Wire.write(0x1C);
+      Wire.write(0x10);
+      Wire.endTransmission();
+      Wire.beginTransmission(0x68);
+      Wire.write(0x3B);
+      Wire.endTransmission(); 
+      Wire.requestFrom(0x68,6);
+      int16_t AccXLSB = Wire.read() << 8 | Wire.read();
+      int16_t AccYLSB = Wire.read() << 8 | Wire.read();
+      int16_t AccZLSB = Wire.read() << 8 | Wire.read();
+
+      Wire.beginTransmission(0x68);
+      Wire.write(0x1B); 
+      Wire.write(0x8);
+      Wire.endTransmission();     
+      Wire.beginTransmission(0x68);
+      Wire.write(0x43);
+      Wire.endTransmission();
+      Wire.requestFrom(0x68,6);
+      int16_t GyroX = Wire.read()<<8 | Wire.read();
+      int16_t GyroY = Wire.read()<<8 | Wire.read();
+      int16_t GyroZ = Wire.read()<<8 | Wire.read();
+
+      rollRate = (double)GyroX / 65.5;
+      pitchRate = (double)GyroY / 65.5;
+      yawRate = (double)GyroZ / 65.5;
+
+      accelerationX = (double)AccXLSB/ 4096 + accelerationXOffset;
+      accelerationY = (double)AccYLSB/ 4096 + accelerationYOffset;
+      accelerationZ = (double)AccZLSB/ 4096 + accelerationZOffset;
+
+      rollAngle = atan(accelerationY / sqrt(accelerationX * accelerationX + accelerationZ * accelerationZ)) * 1 / (3.142 / 180);
+      pitchAngle = -atan(accelerationX / sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 1 / (3.142 / 180);
     }
 
   public:
     IMU() {
-      mpu.initialize();
-      uint8_t status = mpu.dmpInitialize();
-      mpu.setXGyroOffset(Config::Gyro::XGyroOffset);
-      mpu.setYGyroOffset(Config::Gyro::YGyroOffset);
-      mpu.setZGyroOffset(Config::Gyro::ZGyroOffset);
-      mpu.setZAccelOffset(Config::Gyro::ZAccelOffset);
-      if (status != 0) {
-        Serial.println("a dat lumea de necaz");
-        while (1) delay(500);
+      Wire.setClock(400000);
+      Wire.begin();
+      delay(250);
+      Wire.beginTransmission(0x68); 
+      Wire.write(0x6B);
+      Wire.write(0x00);
+      Wire.endTransmission();
+
+      for (int i = 0; i < Config::Gyro::CalibrationCount; i++) {
+        readData();
+        yawOffset += yawRate;
+        pitchOffset += pitchRate;
+        rollOffset += rollRate;
+        delay(1);
       }
 
-      mpu.CalibrateAccel();
-      mpu.CalibrateGyro();
-      mpu.setDMPEnabled(true);
-      mpu.getIntStatus();
-      packetSize = mpu.dmpGetFIFOPacketSize();
+      yawOffset /= Config::Gyro::CalibrationCount;
+      pitchOffset /= Config::Gyro::CalibrationCount;
+      rollOffset /= Config::Gyro::CalibrationCount;
 
       readThread = std::thread(&IMU::readHandle, this);
     }
@@ -117,9 +181,50 @@ namespace Hardware {
       readThread.join();
     }
 
-    double getYaw() const { return yaw; }
-    double getPitch() const { return pitch; }
-    double getRoll() const { return roll; }
+    double getYaw() const { return yawRate; }
+    double getPitch() const { return pitchRate; }
+    double getRoll() const { return rollRate; }
+    double getRollAngle() const { return rollAngle; }
+    double getPitchAngle() const { return pitchAngle; }
+    double getKalmanRollAngle() const { return kalmanRollAngle; }
+    double getKalmanPitchAngle() const { return kalmanPitchAngle; }
+  };
+
+  class Voltage {
+  private:
+    bool running = true;
+
+    std::thread readThread;
+    std::mutex readMutex;
+
+    int pin;
+
+    double voltage;
+
+    void readHandle() {
+      while (running) {
+        voltage = analogRead(pin) * (3.3 / 1023.0);
+
+        // voltage = (double)analogRead(15) / 62;
+        // current = (double)analogRead(21) * 0.089;
+
+        delay(50);
+      }
+    }
+
+  public:
+    Voltage(int pin) {
+      this->pin = pin;
+    }
+
+    ~Voltage() {
+      readMutex.lock();
+      running = false;
+      readMutex.unlock();
+      readThread.join();
+    }
+
+    double getVoltage() { return voltage; }
   };
 }
 
