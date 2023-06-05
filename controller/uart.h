@@ -16,7 +16,6 @@ namespace com {
 
     void update() {
       if (serial.available() && serial.read() == 'x') {
-        serial.write("b");
         String buffer;
         while (serial.available()) {
           char c = serial.read();

@@ -154,7 +154,7 @@ namespace Control {
       this->zAxis = controlData.zAxis;
       this->rotation = controlData.rotation;
 
-      this->frontLeft->setSpeed((double)map(this->xAxis, -10, 10, 0, 100) / 100);
+      // this->frontLeft->setSpeed((double)map(this->xAxis, -10, 10, 0, 100) / 100);
     }
 
     data::SensorData getSensorData() {
