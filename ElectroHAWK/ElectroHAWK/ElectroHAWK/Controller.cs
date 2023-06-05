@@ -14,9 +14,9 @@ namespace ElectroHAWK
     public partial class Controller : Form
     {
         private Connection connection;
-        private Connect last;
+        private Form last;
 
-        public Controller(Connection connection, Connect last)
+        public Controller(Connection connection, Form last)
         {
             InitializeComponent();
             this.connection = connection;
