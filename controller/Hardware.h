@@ -15,7 +15,6 @@ namespace Hardware {
 
     namespace IMU {
       inline constexpr int CalibrationCount = 500;
-      // inline constexpr double AccelerationXOffset = 0.05, AccelerationYOffset = 0.03, AccelerationZOffset = 0.075;
       inline constexpr int ReadDataMicrosecondsDelay = 200;
     }
   }
@@ -34,11 +33,6 @@ namespace Hardware {
           Config::Motor::pulseWidth.second
         );
         controller.write(0);
-
-        // analogWriteFrequency(pin, 250);
-        // analogWriteResolution(12);
-        // delay(250);
-        // analogWrite(pin, 0);
       }
 
       void setSpeed(double speed) {
@@ -147,10 +141,6 @@ namespace Hardware {
       rollRate = (double)GyroX / 65.5 - rollOffset;
       pitchRate = (double)GyroY / 65.5 - pitchOffset;
       yawRate = (double)GyroZ / 65.5 - yawOffset;
-
-      // accelerationX = (double)AccXLSB / 4096 - Config::IMU::AccelerationXOffset;
-      // accelerationY = (double)AccYLSB / 4096 - Config::IMU::AccelerationYOffset;
-      // accelerationZ = (double)AccZLSB / 4096 - Config::IMU::AccelerationZOffset;
 
       accelerationX = (double)AccXLSB / 4096 - accelerationXOffset;
       accelerationY = (double)AccYLSB / 4096 - accelerationYOffset;

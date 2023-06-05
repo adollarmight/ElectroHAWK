@@ -17,7 +17,7 @@ namespace Control {
     inline constexpr int voltagePin = 27;
 
     inline constexpr double MOTOR_IDLE_SPEED = 1100;
-    inline constexpr double kP = 0.2;
+    inline constexpr double kP = 0.005;
     inline constexpr double kI = 0;
     inline constexpr double kD = 0;
   }
@@ -42,7 +42,7 @@ namespace Control {
     double lastRollError = 0, rollErrorSum = 0;
     double lastPitchError = 0, pitchErrorSum = 0;
 
-    void setMotors(double fl, double fr, double bl, double br) {
+    void setMotorsPower(double fl, double fr, double bl, double br) {
       this->frontRight->setSpeed(fr);
       this->frontLeft->setSpeed(fl);
       this->backRight->setSpeed(br);
@@ -67,15 +67,29 @@ namespace Control {
         double frontRightMultiplier = -rollPower + pitchPower;
         double backLeftMultiplier = -rollPower - pitchPower;
         double backRightMultiplier = rollPower - pitchPower;
-        setMotors(
-          power * frontLeftMultiplier, 
-          power * frontRightMultiplier, 
-          power * backLeftMultiplier, 
-          power * backRightMultiplier
-        );
+        // setMotorsPower(
+        //   power * frontLeftMultiplier, 
+        //   power * frontRightMultiplier, 
+        //   power * backLeftMultiplier, 
+        //   power * backRightMultiplier
+        // );
+
+        Serial.print("Power: ");
+        Serial.print(power);
+        Serial.print("  Front left: ");
+        Serial.print(power * frontLeftMultiplier);
+        Serial.print("  Front right: ");
+        Serial.print(power * frontRightMultiplier);
+        Serial.print("  Back left: ");
+        Serial.print(power * backLeftMultiplier);
+        Serial.print("  BackR right: ");
+        Serial.print(power * backRightMultiplier);
+        Serial.println();
 
         lastRollError = rollError;
         lastPitchError = pitchError;
+
+        delay(5);
       }
     }
 
@@ -99,9 +113,9 @@ namespace Control {
       voltage(new Hardware::Voltage(voltagePin))
     {
       delay(5000);
-      setMotors(0.1, 0.1, 0.1, 0.1);
+      setMotorsPower(0.1, 0.1, 0.1, 0.1);
       delay(5000);
-      setMotors(0, 0, 0, 0);
+      setMotorsPower(0, 0, 0, 0);
       controllerThread = std::thread(&Driver::controllerHandle, this);
     }
 
@@ -119,8 +133,8 @@ namespace Control {
       this->rotation = controlData.rotation;
       lastRollError = 0, rollErrorSum = 0;
       lastPitchError = 0, pitchErrorSum = 0;
-      power = mapf(this->zAxis, -10.0, 10.0, 0.0, 1.0);
-      desiredPitch = mapf(this->xAxis, -10.0, 10.0, 0.0, 1.0); 
+      power = mapf(this->zAxis, 0, 10.0, 0.0, 1.0);
+      desiredPitch = mapf(this->xAxis, -10.0, 10.0, 0.0, 360.0); 
     }
 
     data::SensorData getSensorData() {
