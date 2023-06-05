@@ -16,11 +16,14 @@ namespace Control {
 
     inline constexpr int voltagePin = 27;
 
-    inline constexpr double MotorIdleSpeed = 1100;
-    inline constexpr double MotorCutoffSpeed = 0;
+    inline constexpr double MOTOR_IDLE_SPEED = 1100;
+    inline constexpr double kP = 0.2;
+    inline constexpr double kI = 0;
+    inline constexpr double kD = 0;
   }
 
   class Driver {
+  private:
     std::unique_ptr<Hardware::Motor> frontLeft;
     std::unique_ptr<Hardware::Motor> frontRight;
     std::unique_ptr<Hardware::Motor> backLeft;
@@ -29,68 +32,55 @@ namespace Control {
     std::unique_ptr<Hardware::Voltage> voltage;
 
     int xAxis, yAxis, zAxis, rotation;
-
-    double Kp = 0.5;
-    double Ki = 0.001;
-    double Kd = 0;
-
-    double desiredPitch = 0.0;
-    double desiredRoll = 0.0;
-
-    double lastPitchError = 0.0;
-    double lastRollError = 0.0;
-    double totalPitchError = 0.0;
-    double totalRollError = 0.0;
-
-    double throttle = 1000;
-
     bool running = true;
 
     std::thread controllerThread;
     std::mutex controllerMutex;
 
-    void controlMotors(double throttle, double pitchPID, double rollPID) {
-      double frontRightSpeed = throttle + pitchPID;
-      double frontLeftSpeed = throttle + rollPID;
-      double backLeftSpeed = throttle - pitchPID;
-      double backRightSpeed = throttle - rollPID;
+    double desiredRoll = 0, desiredYaw = 0, desiredPitch= 0;
+    double power = 0;
+    double lastRollError = 0, rollErrorSum = 0;
+    double lastPitchError = 0, pitchErrorSum = 0;
 
-      // Serial.print("Raw front right ");
-      // Serial.println(frontRightSpeed);
-      // Serial.print("Raw front left ");
-      // Serial.println(frontLeftSpeed);
-      // Serial.print("Raw back right ");
-      // Serial.println(backRightSpeed);
-      // Serial.print("Raw back left ");
-      // Serial.println(backLeftSpeed);
-      // Serial.println();
-      // frontRight->setSpeed((frontRightSpeed - 1000) / 1000);
-      // frontLeft->setSpeed((frontLeftSpeed - 1000) / 1000);
-      // backRight->setSpeed((backRightSpeed - 1000) / 1000);
-      // backLeft->setSpeed((backLeftSpeed - 1000) / 1000);
-    }
-
-    double calculatePIDOutput(double measuredValue, double desiredValue, double kp, double ki, double kd, double& lastError, double& totalError) {
-      double error = desiredValue - measuredValue;
-      totalError += error;
-      double errorChange = error - lastError;
-
-      double pidOutput = kp * error + ki * totalError + kd * errorChange;
-
-      lastError = error;
-
-      return pidOutput;
+    void setMotors(double fl, double fr, double bl, double br) {
+      this->frontRight->setSpeed(fr);
+      this->frontLeft->setSpeed(fl);
+      this->backRight->setSpeed(br);
+      this->backLeft->setSpeed(bl);
     }
 
     void controllerHandle() {
       while (running) {
-        double pitchPID = calculatePIDOutput(imu->getKalmanPitchAngle(), desiredPitch, Kp, Ki, Kd, lastPitchError, totalPitchError);
-        double rollPID = calculatePIDOutput(imu->getKalmanRollAngle(), desiredRoll, Kp, Ki, Kd, lastRollError, totalRollError);
+        double rollError = desiredRoll - imu->getKalmanRollAngle();
+        double pitchError = desiredPitch - (-imu->getKalmanPitchAngle());
 
-        controlMotors(throttle, pitchPID, rollPID);
+        // rate of change in error (Newton is proud frfr)
+        double rollDerivative = rollError - lastRollError;
+        double pitchDerivative = pitchError - lastPitchError;
 
-        delay(25);
+        rollErrorSum += rollError;
+        pitchErrorSum += pitchError;
+
+        double rollPower = Config::kP * rollError + Config::kI * rollErrorSum + Config::kD * rollDerivative;
+        double pitchPower = Config::kP * pitchError + Config::kI * pitchError + Config::kD * pitchDerivative;
+        double frontLeftMultiplier = rollPower + pitchPower;
+        double frontRightMultiplier = -rollPower + pitchPower;
+        double backLeftMultiplier = -rollPower - pitchPower;
+        double backRightMultiplier = rollPower - pitchPower;
+        setMotors(
+          power * frontLeftMultiplier, 
+          power * frontRightMultiplier, 
+          power * backLeftMultiplier, 
+          power * backRightMultiplier
+        );
+
+        lastRollError = rollError;
+        lastPitchError = pitchError;
       }
+    }
+
+    double mapf(double x, double inMin, double inMax, double outMin, double outMax) {
+      return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
   public:
@@ -108,13 +98,10 @@ namespace Control {
       imu(new Hardware::IMU()),
       voltage(new Hardware::Voltage(voltagePin))
     {
-      Serial.println("Calibrating Motors");
       delay(5000);
       setMotors(0.1, 0.1, 0.1, 0.1);
       delay(5000);
       setMotors(0, 0, 0, 0);
-      Serial.println("Motors Calibrated");
-
       controllerThread = std::thread(&Driver::controllerHandle, this);
     }
 
@@ -125,36 +112,15 @@ namespace Control {
       controllerThread.join();
     }
 
-    void stop() {
-      controllerMutex.lock();
-
-      running = false;
-
-      controllerMutex.unlock();
-    }
-
-    void start() {
-      controllerMutex.lock();
-
-      running = true;
-
-      controllerMutex.unlock();
-    }
-
-    void setMotors(double fr, double fl, double br, double bl) {
-      this->frontRight->setSpeed(fr);
-      this->frontLeft->setSpeed(fl);
-      this->backRight->setSpeed(br);
-      this->backLeft->setSpeed(bl);
-    }
-
     void setControls(data::ControlData controlData) {
       this->xAxis = controlData.xAxis;
       this->yAxis = controlData.yAxis;
       this->zAxis = controlData.zAxis;
       this->rotation = controlData.rotation;
-
-      // this->frontLeft->setSpeed((double)map(this->xAxis, -10, 10, 0, 100) / 100);
+      lastRollError = 0, rollErrorSum = 0;
+      lastPitchError = 0, pitchErrorSum = 0;
+      power = mapf(this->zAxis, -10.0, 10.0, 0.0, 1.0);
+      desiredPitch = mapf(this->xAxis, -10.0, 10.0, 0.0, 1.0); 
     }
 
     data::SensorData getSensorData() {

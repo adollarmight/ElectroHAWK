@@ -14,7 +14,6 @@ std::unique_ptr<Control::Driver> driver;
 std::unique_ptr<UartType> uart;
 
 void setup() {
-  Serial.begin(115200);
   uartSerial.begin(115200, SERIAL_8N1, RX, TX);
   uart = std::unique_ptr<UartType>(new UartType(uartSerial));
 
@@ -25,7 +24,6 @@ void loop() {
   if (uart->isReadyToReceive()) {
       data::ControlData controlData = uart->getReceived();
       driver->setControls(controlData);
-      Serial.println(controlData.xAxis);
   }
   uart->send(driver->getSensorData());
   uart->update();
