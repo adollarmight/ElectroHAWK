@@ -73,6 +73,10 @@ void initializeCamera() {
     Serial.printf("Camera init failed with error 0x%x", err);
     return;
   }
+
+  sensor_t *s = esp_camera_sensor_get();
+  s->set_vflip(s, 1); // Flips the image vertically
+  s->set_hmirror(s, 1); // Flips the image horizontally
 }
 
 void setup() {

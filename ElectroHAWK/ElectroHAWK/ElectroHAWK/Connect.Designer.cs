@@ -42,10 +42,10 @@
             // IpAddressTextBox
             // 
             this.IpAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.IpAddressTextBox.Location = new System.Drawing.Point(261, 577);
+            this.IpAddressTextBox.Location = new System.Drawing.Point(264, 577);
             this.IpAddressTextBox.Margin = new System.Windows.Forms.Padding(6);
             this.IpAddressTextBox.Name = "IpAddressTextBox";
-            this.IpAddressTextBox.Size = new System.Drawing.Size(511, 51);
+            this.IpAddressTextBox.Size = new System.Drawing.Size(508, 51);
             this.IpAddressTextBox.TabIndex = 0;
             // 
             // ConnectButton
