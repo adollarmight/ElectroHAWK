@@ -5,8 +5,8 @@
 #include "server.h"
 #include "uart.h"
 
-#define SSID "esp"
-#define PASSWORD "test1234"
+#define SSID "DIGI_3e8fc8"
+#define PASSWORD "f988c170"
 
 #define RX 3
 #define TX 1
@@ -72,20 +72,23 @@ void initializeCamera() {
 }
 
 void setup() {
+  Serial.begin(115200);
   uartSerial.begin(115200, SERIAL_8N1, RX, TX);
   initializeCamera();
   connectWifi();
+  // 192.168.1.7
+  delay(1000);
   server = new com::TcpServer();
-  uart = new com::Uart<data::SensorData, data::ControlData>(uartSerial);
+  // uart = new com::Uart<data::SensorData, data::ControlData>(uartSerial);
 }
 
 void loop() {
-  uart->send(server->getInput());
-  if (uart->isReadyToReceive())
-    sensorData = uart->getReceived();
+  // uart->send(server->getInput());
+  // if (uart->isReadyToReceive())
+  //   sensorData = uart->getReceived();
 
   sensorData.pitchAngle = (double)random(0, 100);
 
   server->update(sensorData);
-  uart->update();
+  // uart->update();
 }

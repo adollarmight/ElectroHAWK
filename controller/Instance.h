@@ -2,8 +2,10 @@
 #define _INSTANCE_H_
 
 #include <string>
-#include "Hardware.h"
-#include "Communication.h"
+#include "hardware.h"
+#include "data.h"
+#include "uart.h"
+#include "driver.h"
 
 namespace Config {
   inline constexpr int RX = 16;
@@ -14,29 +16,30 @@ namespace Config {
 
 class Instance {
 private:
-  Communication::UART<
-    Communication::SensorData, 
-    Communication::DirectionData
-    > communication;
+  HardwareSerial uartSerial;
+
+  std::unique_ptr<Control::Driver> driver;
+  std::unique_ptr<com::Uart<data::ControlData, data::SensorData>> uart;
 
 public:
-  Instance(): communication(Config::RX, Config::TX) {
+  Instance():
+    uartSerial(2),
+    driver(new Control::Driver),
+    uart(new com::Uart<data::ControlData, data::SensorData>(uartSerial))
+  {
     Serial.begin(115200);
-    Hardware::initialize(); 
   }
 
   ~Instance() {
+
   }
 
   void update() {
-    communication.send({ 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0 });
-    if (communication.receivedDataCount()) {
-      Communication::DirectionData direction = communication.recieve();
-      Serial.print(direction.direction);
-      Serial.print(" ");
-      Serial.println(direction.magnitude);
-    }
-    delay(100);
+    if (uart->isReadyToReceive())
+      driver->setControls(uart->getReceived());
+    uart->send(driver->getSensorData());
+    uart->update();
+    delay(50);
   }
 };
 

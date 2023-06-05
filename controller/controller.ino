@@ -1,4 +1,4 @@
-#include "Instance.h"
+#include "instance.h"
 
 Instance* instance;
 

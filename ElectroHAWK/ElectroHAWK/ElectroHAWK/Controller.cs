@@ -26,19 +26,17 @@ namespace ElectroHAWK
                 Video.Image = image;
             };
             this.connection.SensorDataChanged += (sender, sensor) => {
-                PitchAngleLabel.Text = "Pitch: " + sensor.PitchAngle.ToString() + "°";
-                RollAngleLabel.Text = "Roll: " + sensor.RollAngle.ToString() + "°";
-                VoltageLabel.Text = "Battery: " + sensor.Voltage.ToString() + "V";
-
-                // TemperatureLabel.Text = "Temperature: " + sensor.Temperature.ToString() + "°C";
-                // PressureLabel.Text = "Pressure: " + sensor.Pressure.ToString() + "hPa";
-                // AltitudeLabel.Text = "Altitude: " + sensor.Altitude.ToString() + "m";
+                Invoke(new Action(() =>
+                {
+                    PitchAngleLabel.Text = "Pitch: " + sensor.PitchAngle.ToString() + "°";
+                    RollAngleLabel.Text = "Roll: " + sensor.RollAngle.ToString() + "°";
+                    VoltageLabel.Text = "Battery: " + sensor.Voltage.ToString() + "V";
+                    TemperatureLabel.Text = "Temperature: " + sensor.Temperature.ToString() + "°C";
+                    PressureLabel.Text = "Pressure: " + sensor.Pressure.ToString() + "hPa";
+                    AltitudeLabel.Text = "Altitude: " + sensor.Altitude.ToString() + "m";
+                }));
             };
             PitchAngleLabel.BackColor = System.Drawing.Color.Transparent;
-        }
-
-        private void Controller_FormClosed(object sender, FormClosedEventArgs e) {
-            Application.Exit();
         }
 
         private void ZAxisTrackBar_Scroll(object sender, EventArgs e) {
@@ -59,8 +57,14 @@ namespace ElectroHAWK
             connection.CurrentInput = input;
         }
 
-        private void pictureBox4_Click(object sender, EventArgs e) {
-
+        private void Controller_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            connection.Running = false;
+            Application.Exit();
+        }
+        private void Controller_FormClosed(object sender, FormClosedEventArgs e) {
+            connection.Running = false;
+            Application.Exit();
         }
     }
 }

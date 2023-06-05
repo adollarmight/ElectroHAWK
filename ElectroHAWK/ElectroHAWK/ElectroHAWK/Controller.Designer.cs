@@ -90,7 +90,7 @@
             // 
             // MainLayout
             // 
-            this.MainLayout.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.MainLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.MainLayout.ColumnCount = 2;
             this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
@@ -110,7 +110,7 @@
             // 
             // BottomSplitter
             // 
-            this.BottomSplitter.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.BottomSplitter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BottomSplitter.ColumnCount = 2;
             this.BottomSplitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.03605F));
             this.BottomSplitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.96395F));
@@ -128,7 +128,7 @@
             // 
             this.XAxisLayout.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.XAxisLayout.AutoSize = true;
-            this.XAxisLayout.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.XAxisLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.XAxisLayout.Controls.Add(this.XAxisLabel);
             this.XAxisLayout.Controls.Add(this.XAxisInput);
             this.XAxisLayout.Location = new System.Drawing.Point(6, 11);
@@ -140,8 +140,9 @@
             // XAxisLabel
             // 
             this.XAxisLabel.AutoSize = true;
-            this.XAxisLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.XAxisLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.XAxisLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.XAxisLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.XAxisLabel.Location = new System.Drawing.Point(3, 7);
             this.XAxisLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.XAxisLabel.Name = "XAxisLabel";
@@ -151,7 +152,7 @@
             // 
             // XAxisInput
             // 
-            this.XAxisInput.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.XAxisInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.XAxisInput.Location = new System.Drawing.Point(70, 3);
             this.XAxisInput.Minimum = -10;
             this.XAxisInput.Name = "XAxisInput";
@@ -163,7 +164,7 @@
             // 
             this.RotationLayout.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.RotationLayout.AutoSize = true;
-            this.RotationLayout.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.RotationLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.RotationLayout.Controls.Add(this.RotationLabel);
             this.RotationLayout.Controls.Add(this.RotationTrackBar);
             this.RotationLayout.Location = new System.Drawing.Point(591, 11);
@@ -175,8 +176,9 @@
             // RotationLabel
             // 
             this.RotationLabel.AutoSize = true;
-            this.RotationLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.RotationLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.RotationLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.RotationLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.RotationLabel.Location = new System.Drawing.Point(3, 7);
             this.RotationLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.RotationLabel.Name = "RotationLabel";
@@ -186,7 +188,7 @@
             // 
             // RotationTrackBar
             // 
-            this.RotationTrackBar.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.RotationTrackBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.RotationTrackBar.Location = new System.Drawing.Point(92, 3);
             this.RotationTrackBar.Minimum = -10;
             this.RotationTrackBar.Name = "RotationTrackBar";
@@ -196,7 +198,7 @@
             // 
             // TopSplitter
             // 
-            this.TopSplitter.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.TopSplitter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.TopSplitter.ColumnCount = 2;
             this.TopSplitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
             this.TopSplitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -213,7 +215,7 @@
             // 
             // DataLayout
             // 
-            this.DataLayout.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.DataLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.DataLayout.ColumnCount = 3;
             this.DataLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.DataLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
@@ -239,7 +241,7 @@
             // 
             this.flowLayoutPanel5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.flowLayoutPanel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.flowLayoutPanel5.Controls.Add(this.pictureBox6);
             this.flowLayoutPanel5.Controls.Add(this.AltitudeLabel);
             this.flowLayoutPanel5.Location = new System.Drawing.Point(792, 44);
@@ -249,7 +251,7 @@
             // 
             // pictureBox6
             // 
-            this.pictureBox6.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.pictureBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pictureBox6.Image = global::ElectroHAWK.Properties.Resources.altitude;
             this.pictureBox6.Location = new System.Drawing.Point(0, 0);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(0);
@@ -262,8 +264,9 @@
             // AltitudeLabel
             // 
             this.AltitudeLabel.AutoSize = true;
-            this.AltitudeLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.AltitudeLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.AltitudeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.AltitudeLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.AltitudeLabel.Location = new System.Drawing.Point(47, 7);
             this.AltitudeLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.AltitudeLabel.Name = "AltitudeLabel";
@@ -276,7 +279,7 @@
             // 
             this.flowLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel4.AutoSize = true;
-            this.flowLayoutPanel4.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.flowLayoutPanel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.flowLayoutPanel4.Controls.Add(this.pictureBox5);
             this.flowLayoutPanel4.Controls.Add(this.PressureLabel);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(434, 44);
@@ -286,7 +289,7 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pictureBox5.Image = global::ElectroHAWK.Properties.Resources.pressure;
             this.pictureBox5.Location = new System.Drawing.Point(0, 0);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(0);
@@ -299,8 +302,9 @@
             // PressureLabel
             // 
             this.PressureLabel.AutoSize = true;
-            this.PressureLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.PressureLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.PressureLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.PressureLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.PressureLabel.Location = new System.Drawing.Point(33, 7);
             this.PressureLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.PressureLabel.Name = "PressureLabel";
@@ -313,7 +317,7 @@
             // 
             this.flowLayoutPanel3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.flowLayoutPanel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.flowLayoutPanel3.Controls.Add(this.pictureBox4);
             this.flowLayoutPanel3.Controls.Add(this.TemperatureLabel);
             this.flowLayoutPanel3.Location = new System.Drawing.Point(86, 45);
@@ -323,7 +327,7 @@
             // 
             // pictureBox4
             // 
-            this.pictureBox4.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pictureBox4.Image = global::ElectroHAWK.Properties.Resources.temperature;
             this.pictureBox4.Location = new System.Drawing.Point(0, 0);
             this.pictureBox4.Margin = new System.Windows.Forms.Padding(0);
@@ -332,13 +336,13 @@
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 0;
             this.pictureBox4.TabStop = false;
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // TemperatureLabel
             // 
             this.TemperatureLabel.AutoSize = true;
-            this.TemperatureLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.TemperatureLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.TemperatureLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.TemperatureLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.TemperatureLabel.Location = new System.Drawing.Point(33, 7);
             this.TemperatureLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.TemperatureLabel.Name = "TemperatureLabel";
@@ -351,7 +355,7 @@
             // 
             this.flowLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.flowLayoutPanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.flowLayoutPanel2.Controls.Add(this.pictureBox3);
             this.flowLayoutPanel2.Controls.Add(this.VoltageLabel);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(785, 5);
@@ -361,7 +365,7 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.pictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pictureBox3.Image = global::ElectroHAWK.Properties.Resources.battery;
             this.pictureBox3.Location = new System.Drawing.Point(0, 0);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(0);
@@ -374,8 +378,9 @@
             // VoltageLabel
             // 
             this.VoltageLabel.AutoSize = true;
-            this.VoltageLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.VoltageLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.VoltageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.VoltageLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.VoltageLabel.Location = new System.Drawing.Point(46, 7);
             this.VoltageLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.VoltageLabel.Name = "VoltageLabel";
@@ -388,22 +393,22 @@
             // 
             this.flowLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.flowLayoutPanel1.Controls.Add(this.pictureBox2);
             this.flowLayoutPanel1.Controls.Add(this.RollAngleLabel);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(470, 4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(92, 31);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(92, 32);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.pictureBox2.Image = global::ElectroHAWK.Properties.Resources.angle2;
+            this.pictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pictureBox2.Image = global::ElectroHAWK.Properties.Resources.angle;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(30, 31);
+            this.pictureBox2.Size = new System.Drawing.Size(30, 32);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
@@ -411,8 +416,9 @@
             // RollAngleLabel
             // 
             this.RollAngleLabel.AutoSize = true;
-            this.RollAngleLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.RollAngleLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.RollAngleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.RollAngleLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.RollAngleLabel.Location = new System.Drawing.Point(33, 7);
             this.RollAngleLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.RollAngleLabel.Name = "RollAngleLabel";
@@ -425,7 +431,7 @@
             // 
             this.Data.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Data.AutoSize = true;
-            this.Data.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Data.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Data.Controls.Add(this.pictureBox1);
             this.Data.Controls.Add(this.PitchAngleLabel);
             this.Data.Location = new System.Drawing.Point(123, 4);
@@ -435,8 +441,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.pictureBox1.Image = global::ElectroHAWK.Properties.Resources.angle2;
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pictureBox1.Image = global::ElectroHAWK.Properties.Resources.angle;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
@@ -448,8 +454,9 @@
             // PitchAngleLabel
             // 
             this.PitchAngleLabel.AutoSize = true;
-            this.PitchAngleLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.PitchAngleLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.PitchAngleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.PitchAngleLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.PitchAngleLabel.Location = new System.Drawing.Point(33, 7);
             this.PitchAngleLabel.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.PitchAngleLabel.Name = "PitchAngleLabel";
@@ -460,7 +467,7 @@
             // 
             // Logo
             // 
-            this.Logo.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Logo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Logo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Logo.Image = global::ElectroHAWK.Properties.Resources.electrohawk_v2;
             this.Logo.Location = new System.Drawing.Point(3, 3);
@@ -474,7 +481,7 @@
             // 
             this.ZAxisLayout.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ZAxisLayout.AutoSize = true;
-            this.ZAxisLayout.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.ZAxisLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ZAxisLayout.Controls.Add(this.ZAxisLabel);
             this.ZAxisLayout.Controls.Add(this.ZAxisTrackBar);
             this.ZAxisLayout.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -487,8 +494,9 @@
             // ZAxisLabel
             // 
             this.ZAxisLabel.AutoSize = true;
-            this.ZAxisLabel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.ZAxisLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ZAxisLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.ZAxisLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.ZAxisLabel.Location = new System.Drawing.Point(3, 0);
             this.ZAxisLabel.Name = "ZAxisLabel";
             this.ZAxisLabel.Size = new System.Drawing.Size(60, 18);
@@ -497,7 +505,7 @@
             // 
             // ZAxisTrackBar
             // 
-            this.ZAxisTrackBar.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.ZAxisTrackBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ZAxisTrackBar.Location = new System.Drawing.Point(20, 18);
             this.ZAxisTrackBar.Margin = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.ZAxisTrackBar.Minimum = -10;
@@ -509,7 +517,7 @@
             // 
             // Video
             // 
-            this.Video.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.Video.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Video.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Video.Location = new System.Drawing.Point(3, 112);
             this.Video.Name = "Video";
@@ -528,6 +536,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Controller";
             this.Text = "ElectroHAWK - Controller";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Controller_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Controller_FormClosed);
             this.MainLayout.ResumeLayout(false);
             this.MainLayout.PerformLayout();

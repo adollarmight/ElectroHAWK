@@ -41,5 +41,12 @@ namespace ElectroHAWK
         private void Connect_FormClosed(object sender, FormClosedEventArgs e) {
             Application.Exit();
         }
+
+        private void ScanButton_Click(object sender, EventArgs e)
+        {
+            var scanner = new Scanner(this);
+            this.Hide();
+            scanner.Show();
+        }
     }
 }

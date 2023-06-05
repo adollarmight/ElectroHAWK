@@ -2,36 +2,94 @@
 #define _DRIVER_H_
 
 #include <memory>
-#include "Hardware.h"
+#include <utility>
+#include "hardware.h"
+#define X(p) p.first
+#define Y(p) p.second
 
 namespace Control {
   namespace Config {
-    inline constexpr frontLeftPin = 25;
-    inline constexpr frontRightPin = 26;
-    inline constexpr backLeftPin = 32;
-    inline constexpr backRightPin = 33;
+    inline constexpr int frontLeftPin = 26;
+    inline constexpr int frontRightPin = 25;
+    inline constexpr int backLeftPin = 33;
+    inline constexpr int backRightPin = 32;
+
+    inline constexpr int voltagePin = 27;
+
+    inline constexpr double MotorIdleSpeed = 1100;
+    inline constexpr double MotorCutoffSpeed = 0;
   }
 
-  // handles motor speed acording to the direction
   class Driver {
-  private:
-    Direction direction = Movement.Nothing;
-    double magnitude = 0;
-
-    // hardware
     std::unique_ptr<Hardware::Motor> frontLeft;
     std::unique_ptr<Hardware::Motor> frontRight;
     std::unique_ptr<Hardware::Motor> backLeft;
     std::unique_ptr<Hardware::Motor> backRight;
     std::unique_ptr<Hardware::IMU> imu;
+    std::unique_ptr<Hardware::Voltage> voltage;
+
+    int xAxis, yAxis, zAxis, rotation;
+
+    double Kp = 0.5;
+    double Ki = 0.001;
+    double Kd = 0;
+
+    double desiredPitch = 0.0;
+    double desiredRoll = 0.0;
+
+    double lastPitchError = 0.0;
+    double lastRollError = 0.0;
+    double totalPitchError = 0.0;
+    double totalRollError = 0.0;
+
+    double throttle = 1000;
 
     bool running = true;
+
     std::thread controllerThread;
     std::mutex controllerMutex;
+
+    void controlMotors(double throttle, double pitchPID, double rollPID) {
+      double frontRightSpeed = throttle + pitchPID;
+      double frontLeftSpeed = throttle + rollPID;
+      double backLeftSpeed = throttle - pitchPID;
+      double backRightSpeed = throttle - rollPID;
+
+      // Serial.print("Raw front right ");
+      // Serial.println(frontRightSpeed);
+      // Serial.print("Raw front left ");
+      // Serial.println(frontLeftSpeed);
+      // Serial.print("Raw back right ");
+      // Serial.println(backRightSpeed);
+      // Serial.print("Raw back left ");
+      // Serial.println(backLeftSpeed);
+      // Serial.println();
+      frontRight->setSpeed((frontRightSpeed - 1000) / 1000);
+      frontLeft->setSpeed((frontLeftSpeed - 1000) / 1000);
+      backRight->setSpeed((backRightSpeed - 1000) / 1000);
+      backLeft->setSpeed((backLeftSpeed - 1000) / 1000);
+    }
+
+    double calculatePIDOutput(double measuredValue, double desiredValue, double kp, double ki, double kd, double& lastError, double& totalError) {
+      double error = desiredValue - measuredValue;
+      totalError += error;
+      double errorChange = error - lastError;
+
+      double pidOutput = kp * error + ki * totalError + kd * errorChange;
+
+      lastError = error;
+
+      return pidOutput;
+    }
+
     void controllerHandle() {
       while (running) {
-        // todo: implement
-        delay(500);
+        double pitchPID = calculatePIDOutput(imu->getKalmanPitchAngle(), desiredPitch, Kp, Ki, Kd, lastPitchError, totalPitchError);
+        double rollPID = calculatePIDOutput(imu->getKalmanRollAngle(), desiredRoll, Kp, Ki, Kd, lastRollError, totalRollError);
+
+        controlMotors(throttle, pitchPID, rollPID);
+
+        delay(25);
       }
     }
 
@@ -40,13 +98,20 @@ namespace Control {
       int frontLeftPin = Config::frontLeftPin,
       int frontRightPin = Config::frontRightPin,
       int backLeftPin = Config::backLeftPin,
-      int backRightPin = Config::backRightPin
-    ) {
-      frontLeft = std::make_unique<Hardware::Motor>(frontLeftPin);
-      frontRight = std::make_unique<Hardware::Motor>(frontRightPin);
-      backLeft = std::make_unique<Hardware::Motor>(backLeftPin);
-      backRight = std::make_unique<Hardware::Motor>(backRightPin);
-      imu = std::make_unique<Hardware::IMU>();
+      int backRightPin = Config::backRightPin,
+      int voltagePin = Config::voltagePin
+    ): 
+      frontLeft(new Hardware::Motor(frontLeftPin)),
+      frontRight(new Hardware::Motor(frontRightPin)),
+      backLeft(new Hardware::Motor(backLeftPin)),
+      backRight(new Hardware::Motor(backRightPin)),
+      imu(new Hardware::IMU()),
+      voltage(new Hardware::Voltage(voltagePin))
+    {
+      delay(5000);
+      setMotors(0.1, 0.1, 0.1, 0.1);
+      delay(5000);
+      setMotors(0, 0, 0, 0);
 
       controllerThread = std::thread(&Driver::controllerHandle, this);
     }
@@ -58,11 +123,48 @@ namespace Control {
       controllerThread.join();
     }
 
-    void updateDirection(Direction direction, double magnitude) {
+    void stop() {
       controllerMutex.lock();
-      this->direction = direction;
-      this->magnitude = magnitude;
+
+      running = false;
+
       controllerMutex.unlock();
+    }
+
+    void start() {
+      controllerMutex.lock();
+
+      running = true;
+
+      controllerMutex.unlock();
+    }
+
+    void setMotors(double fr, double fl, double br, double bl) {
+      this->frontRight->setSpeed(fr);
+      this->frontLeft->setSpeed(fl);
+      this->backRight->setSpeed(br);
+      this->backLeft->setSpeed(bl);
+    }
+
+    void setControls(data::ControlData controlData) {
+      this->xAxis = controlData.xAxis;
+      this->yAxis = controlData.yAxis;
+      this->zAxis = controlData.zAxis;
+      this->rotation = controlData.rotation;
+    }
+
+    data::SensorData getSensorData() {
+      data::SensorData sensorData;
+      sensorData.pitchAngle = imu->getKalmanPitchAngle();
+      sensorData.rollAngle = imu->getKalmanRollAngle();
+      sensorData.voltage = voltage->getVoltage();
+      // sensorData.temperature = altimeter->getTemperature();
+      // sensorData.pressure = altimeter->getPressure();
+      // sensorData.altitude = altimeter->getAltitude();
+      sensorData.temperature = 0;
+      sensorData.pressure = 0;
+      sensorData.altitude = 0;
+      return sensorData;
     }
   };
 }
