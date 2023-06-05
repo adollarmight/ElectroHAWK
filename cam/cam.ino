@@ -11,13 +11,22 @@
 #define RX 3
 #define TX 1
 
-HardwareSerial uartSerial(2);
+const int redRGBPin = 12, greenRGBPin = 13, blueRGBPin = 15;
+
+HardwareSerial uartSerial(0);
 
 com::TcpServer* server;
 com::Uart<data::SensorData, data::ControlData>* uart;
 data::SensorData sensorData = {0, 0, 0, 0, 0, 0};
 
+void setColor(int red, int green, int blue) {
+  analogWrite(redRGBPin, red);
+  analogWrite(greenRGBPin, green);
+  analogWrite(blueRGBPin, blue);
+}
+
 void connectWifi() {
+  setColor(0, 0, 255);
   WiFi.begin(SSID, PASSWORD);
   WiFi.setSleep(false);
   while (WiFi.status() != WL_CONNECTED)
@@ -67,10 +76,18 @@ void initializeCamera() {
 }
 
 void setup() {
+  pinMode(redRGBPin, OUTPUT);
+  pinMode(greenRGBPin, OUTPUT);
+  pinMode(blueRGBPin, OUTPUT);
+
+  setColor(255, 0, 0);
+
   uartSerial.begin(115200, SERIAL_8N1, RX, TX);
   initializeCamera();
   connectWifi();
-  delay(1000);
+  
+  setColor(0, 255, 0);
+
   server = new com::TcpServer();
   uart = new com::Uart<data::SensorData, data::ControlData>(uartSerial);
 }
@@ -79,6 +96,7 @@ void loop() {
   uart->send(server->getInput());
   if (uart->isReadyToReceive())
     sensorData = uart->getReceived();
+
   server->update(sensorData);
   uart->update();
 }

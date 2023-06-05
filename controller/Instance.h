@@ -1,7 +1,6 @@
 #ifndef _INSTANCE_H_
 #define _INSTANCE_H_
 
-#include <string>
 #include "hardware.h"
 #include "data.h"
 #include "uart.h"
@@ -28,6 +27,7 @@ public:
     uart(new com::Uart<data::ControlData, data::SensorData>(uartSerial))
   {
     Serial.begin(115200);
+    uartSerial.begin(115200, SERIAL_8N1, RX, TX);
   }
 
   ~Instance() {
@@ -35,11 +35,12 @@ public:
   }
 
   void update() {
-    if (uart->isReadyToReceive())
-      driver->setControls(uart->getReceived());
+    if (uart->isReadyToReceive()) {
+      data::ControlData controlData = uart->getReceived();
+      driver->setControls(controlData);
+    }
     uart->send(driver->getSensorData());
     uart->update();
-    delay(50);
   }
 };
 

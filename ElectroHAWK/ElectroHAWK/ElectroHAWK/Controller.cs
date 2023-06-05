@@ -31,9 +31,9 @@ namespace ElectroHAWK
                     PitchAngleLabel.Text = "Pitch: " + sensor.PitchAngle.ToString() + "°";
                     RollAngleLabel.Text = "Roll: " + sensor.RollAngle.ToString() + "°";
                     VoltageLabel.Text = "Battery: " + sensor.Voltage.ToString() + "V";
-                    TemperatureLabel.Text = "Temperature: " + sensor.Temperature.ToString() + "°C";
-                    PressureLabel.Text = "Pressure: " + sensor.Pressure.ToString() + "hPa";
-                    AltitudeLabel.Text = "Altitude: " + sensor.Altitude.ToString() + "m";
+                    // TemperatureLabel.Text = "Temperature: " + sensor.Temperature.ToString() + "°C";
+                    // PressureLabel.Text = "Pressure: " + sensor.Pressure.ToString() + "hPa";
+                    // AltitudeLabel.Text = "Altitude: " + sensor.Altitude.ToString() + "m";
                 }));
             };
             PitchAngleLabel.BackColor = System.Drawing.Color.Transparent;

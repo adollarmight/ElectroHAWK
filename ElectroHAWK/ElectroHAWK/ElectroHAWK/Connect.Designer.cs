@@ -42,10 +42,10 @@
             // IpAddressTextBox
             // 
             this.IpAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.IpAddressTextBox.Location = new System.Drawing.Point(157, 369);
-            this.IpAddressTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.IpAddressTextBox.Location = new System.Drawing.Point(261, 577);
+            this.IpAddressTextBox.Margin = new System.Windows.Forms.Padding(6);
             this.IpAddressTextBox.Name = "IpAddressTextBox";
-            this.IpAddressTextBox.Size = new System.Drawing.Size(359, 34);
+            this.IpAddressTextBox.Size = new System.Drawing.Size(511, 51);
             this.IpAddressTextBox.TabIndex = 0;
             // 
             // ConnectButton
@@ -56,10 +56,10 @@
             this.ConnectButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ConnectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ConnectButton.ForeColor = System.Drawing.SystemColors.Window;
-            this.ConnectButton.Location = new System.Drawing.Point(4, 4);
-            this.ConnectButton.Margin = new System.Windows.Forms.Padding(4);
+            this.ConnectButton.Location = new System.Drawing.Point(6, 6);
+            this.ConnectButton.Margin = new System.Windows.Forms.Padding(6);
             this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(172, 43);
+            this.ConnectButton.Size = new System.Drawing.Size(258, 67);
             this.ConnectButton.TabIndex = 1;
             this.ConnectButton.Text = "Connect";
             this.ConnectButton.UseVisualStyleBackColor = false;
@@ -70,10 +70,10 @@
             this.IpAddressLabel.AutoSize = true;
             this.IpAddressLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.IpAddressLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.IpAddressLabel.Location = new System.Drawing.Point(13, 372);
-            this.IpAddressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.IpAddressLabel.Location = new System.Drawing.Point(20, 581);
+            this.IpAddressLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.IpAddressLabel.Name = "IpAddressLabel";
-            this.IpAddressLabel.Size = new System.Drawing.Size(138, 29);
+            this.IpAddressLabel.Size = new System.Drawing.Size(206, 42);
             this.IpAddressLabel.TabIndex = 3;
             this.IpAddressLabel.Text = "Ip Address";
             // 
@@ -81,10 +81,10 @@
             // 
             this.pictureBox1.Image = global::ElectroHAWK.Properties.Resources.electrohawk_v2;
             this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(16, 15);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox1.Location = new System.Drawing.Point(24, 23);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(501, 338);
+            this.pictureBox1.Size = new System.Drawing.Size(752, 528);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
@@ -94,9 +94,10 @@
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.Controls.Add(this.ConnectButton);
             this.flowLayoutPanel1.Controls.Add(this.ScanButton);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(93, 419);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(140, 655);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(377, 64);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(566, 100);
             this.flowLayoutPanel1.TabIndex = 4;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -108,10 +109,10 @@
             this.ScanButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ScanButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.ScanButton.ForeColor = System.Drawing.SystemColors.Window;
-            this.ScanButton.Location = new System.Drawing.Point(184, 4);
-            this.ScanButton.Margin = new System.Windows.Forms.Padding(4);
+            this.ScanButton.Location = new System.Drawing.Point(276, 6);
+            this.ScanButton.Margin = new System.Windows.Forms.Padding(6);
             this.ScanButton.Name = "ScanButton";
-            this.ScanButton.Size = new System.Drawing.Size(172, 43);
+            this.ScanButton.Size = new System.Drawing.Size(258, 67);
             this.ScanButton.TabIndex = 2;
             this.ScanButton.Text = "Scan";
             this.ScanButton.UseVisualStyleBackColor = false;
@@ -119,17 +120,17 @@
             // 
             // Connect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(537, 478);
+            this.ClientSize = new System.Drawing.Size(806, 747);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.IpAddressLabel);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.IpAddressTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.Name = "Connect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

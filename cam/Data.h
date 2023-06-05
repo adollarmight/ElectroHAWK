@@ -1,8 +1,6 @@
 #ifndef _DATA_H_
 #define _DATA_H_
 
-#include <sstream>
-
 namespace data {
   struct ControlData {
     int xAxis = 0, yAxis = 0, zAxis = 0, rotation = 0;

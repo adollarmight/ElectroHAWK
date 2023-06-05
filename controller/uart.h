@@ -1,5 +1,5 @@
-#ifndef _UART_H_
-#define _UART_H_
+#ifndef _UARTH_
+#define _UARTH_
 
 #include <stdexcept>
 
@@ -16,6 +16,7 @@ namespace com {
 
     void update() {
       if (serial.available() && serial.read() == 'x') {
+        serial.write("b");
         String buffer;
         while (serial.available()) {
           char c = serial.read();

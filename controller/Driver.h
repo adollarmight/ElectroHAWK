@@ -64,10 +64,10 @@ namespace Control {
       // Serial.print("Raw back left ");
       // Serial.println(backLeftSpeed);
       // Serial.println();
-      frontRight->setSpeed((frontRightSpeed - 1000) / 1000);
-      frontLeft->setSpeed((frontLeftSpeed - 1000) / 1000);
-      backRight->setSpeed((backRightSpeed - 1000) / 1000);
-      backLeft->setSpeed((backLeftSpeed - 1000) / 1000);
+      // frontRight->setSpeed((frontRightSpeed - 1000) / 1000);
+      // frontLeft->setSpeed((frontLeftSpeed - 1000) / 1000);
+      // backRight->setSpeed((backRightSpeed - 1000) / 1000);
+      // backLeft->setSpeed((backLeftSpeed - 1000) / 1000);
     }
 
     double calculatePIDOutput(double measuredValue, double desiredValue, double kp, double ki, double kd, double& lastError, double& totalError) {
@@ -108,10 +108,12 @@ namespace Control {
       imu(new Hardware::IMU()),
       voltage(new Hardware::Voltage(voltagePin))
     {
+      Serial.println("Calibrating Motors");
       delay(5000);
       setMotors(0.1, 0.1, 0.1, 0.1);
       delay(5000);
       setMotors(0, 0, 0, 0);
+      Serial.println("Motors Calibrated");
 
       controllerThread = std::thread(&Driver::controllerHandle, this);
     }
@@ -151,6 +153,8 @@ namespace Control {
       this->yAxis = controlData.yAxis;
       this->zAxis = controlData.zAxis;
       this->rotation = controlData.rotation;
+
+      this->frontLeft->setSpeed((double)map(this->xAxis, -10, 10, 0, 100) / 100);
     }
 
     data::SensorData getSensorData() {

@@ -1,11 +1,9 @@
 #ifndef _DATA_H_
 #define _DATA_H_
 
-#include <sstream>
-
 namespace data {
   struct ControlData {
-    int xAxis, yAxis, zAxis, rotation;
+    int xAxis = 0, yAxis = 0, zAxis = 0, rotation = 0;
 
     static String serialize(const ControlData& data) {
       String buffer = "x" + String(data.xAxis) + " " + String(data.yAxis) +
@@ -35,6 +33,15 @@ namespace data {
       controlData.zAxis = numbers[2];
       controlData.rotation = numbers[3];
       
+      return controlData;
+    }
+
+    static ControlData binaryDeserialize(const char* buffer) {
+      ControlData controlData;
+      memcpy(&controlData.xAxis, (void*)buffer, sizeof(int));
+      memcpy(&controlData.yAxis, (void*)buffer + sizeof(int), sizeof(int));
+      memcpy(&controlData.zAxis, (void*)buffer + sizeof(int) * 2, sizeof(int));
+      memcpy(&controlData.rotation, (void*)buffer + sizeof(int) * 3, sizeof(int));
       return controlData;
     }
   };
