@@ -15,18 +15,13 @@ HardwareSerial uartSerial(2);
 
 com::TcpServer* server;
 com::Uart<data::SensorData, data::ControlData>* uart;
-data::SensorData sensorData = {10.5, 9, 8, 21.9, 412, 61612};
+data::SensorData sensorData = {0, 0, 0, 0, 0, 0};
 
 void connectWifi() {
   WiFi.begin(SSID, PASSWORD);
   WiFi.setSleep(false);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
     delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 void initializeCamera() {
@@ -72,23 +67,18 @@ void initializeCamera() {
 }
 
 void setup() {
-  Serial.begin(115200);
   uartSerial.begin(115200, SERIAL_8N1, RX, TX);
   initializeCamera();
   connectWifi();
-  // 192.168.1.7
   delay(1000);
   server = new com::TcpServer();
-  // uart = new com::Uart<data::SensorData, data::ControlData>(uartSerial);
+  uart = new com::Uart<data::SensorData, data::ControlData>(uartSerial);
 }
 
 void loop() {
-  // uart->send(server->getInput());
-  // if (uart->isReadyToReceive())
-  //   sensorData = uart->getReceived();
-
-  sensorData.pitchAngle = (double)random(0, 100);
-
+  uart->send(server->getInput());
+  if (uart->isReadyToReceive())
+    sensorData = uart->getReceived();
   server->update(sensorData);
-  // uart->update();
+  uart->update();
 }

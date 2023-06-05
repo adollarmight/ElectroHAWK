@@ -8,6 +8,7 @@
 namespace com {
   namespace config {
     inline constexpr int PORT = 5000;
+    inline constexpr int SEND_FAIL_TIMEOUT = 10;
   }
   
   class TcpServer {
@@ -17,10 +18,21 @@ namespace com {
     data::ControlData currentControlData;
     char controlDataBuffer[sizeof(data::ControlData)];
 
-    void sendall(const char* buffer, size_t size) {
+    bool sendall(const char* buffer, size_t size) {
       size_t sent = 0;
-      while (sent < size)
-        sent += client.write(buffer + sent, size - sent);
+      int times = 0;
+      while (sent < size) {
+        size_t currentSent = client.write(buffer + sent, size - sent);
+        if (currentSent == 0) {
+          times++;
+          if (times >= config::SEND_FAIL_TIMEOUT)
+            return false;
+        } else
+          times = 0;
+        sent += currentSent;
+      }
+
+      return true;
     }
 
   public:
@@ -39,7 +51,6 @@ namespace com {
         return;
       }
 
-      // reading
       if (client.available() >= sizeof(data::ControlData)) {
         for (int i = 0; i < sizeof(data::ControlData); i++)
           controlDataBuffer[i] = client.read();
@@ -60,8 +71,14 @@ namespace com {
 
       String sensorBuffer = data::SensorData::serialize(sensorData);
       unsigned int sensorBufferLength = sensorBuffer.length();
-      sendall((char*)(&sensorBufferLength), sizeof(unsigned int));
-      sendall(sensorBuffer.c_str(), sensorBufferLength);
+      if (!sendall((char*)(&sensorBufferLength), sizeof(unsigned int))) {
+        client.stop();
+        return;
+      }
+      if (!sendall(sensorBuffer.c_str(), sensorBufferLength)) {
+        client.stop();
+        return;
+      }
     }
 
     const data::ControlData& getInput() const {
