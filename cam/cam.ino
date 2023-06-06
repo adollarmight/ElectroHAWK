@@ -103,4 +103,6 @@ void loop() {
 
   server->update(sensorData);
   uart->update();
+
+  delay(5);
 }
