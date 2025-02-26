@@ -1,4 +1,4 @@
-# # ElectroHawk - DIY Drone
+# ElectroHawk - DIY Drone
 
 Welcome to ElectroHawk, a DIY drone project that empowers enthusiasts to build a powerful and versatile drone from the ground up, utilizing a selection of high-quality components.
 
